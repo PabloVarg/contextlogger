@@ -5,46 +5,33 @@ import (
 	"log/slog"
 )
 
-func EmbedLoggingAttrs(ctx context.Context) context.Context {
-	reservedCapacity := 20
+func EmbedLoggingAttrs(ctx context.Context, opts ...BucketConfigurator) context.Context {
+	conf := defaultBucketConfig()
+	for _, opt := range opts {
+		opt(conf)
+	}
 
 	return context.WithValue(ctx, loggerKey, &handlerLogger{
-		attrs: make(map[string]any, reservedCapacity),
+		attrs: make(map[string]any, conf.capacity),
 	})
 }
 
-func WithGroup(ctx context.Context, name string) context.Context {
-	reservedCapacity := 20
+func WithGroup(ctx context.Context, name string, opts ...BucketConfigurator) context.Context {
+	conf := defaultBucketConfig()
+	for _, opt := range opts {
+		opt(conf)
+	}
 
 	logger, ok := loggerGroup(ctx, name)
 	if !ok {
 		logger = &handlerLogger{
-			attrs: make(map[string]any, reservedCapacity),
+			attrs: make(map[string]any, conf.capacity),
 		}
 	}
 
 	UpdateContext(ctx, name, logger)
 
 	return context.WithValue(ctx, loggerKey, logger)
-}
-
-func loggerGroup(ctx context.Context, name string) (*handlerLogger, bool) {
-	parent, ok := ctx.Value(loggerKey).(*handlerLogger)
-	if !ok {
-		return nil, false
-	}
-
-	value, ok := parent.attrs[name]
-	if !ok {
-		return nil, false
-	}
-
-	logger, ok := value.(*handlerLogger)
-	if !ok {
-		return nil, false
-	}
-
-	return logger, true
 }
 
 func UpdateContext(ctx context.Context, attrs ...any) {
