@@ -8,14 +8,24 @@ import (
 	"github.com/google/uuid"
 )
 
+// Type to store values in context.Context.
 type loggingContext = string
 
+// Key to store logger struct in a context.Context.
 var loggerKey = loggingContext("logger")
 
+// Key to store slog.Logger to use for printing messages
+var slogLoggerKey = loggingContext("slogLogger")
+
+// handlerLogger holds key value pairs to log, it can hold other handlerLogger's
+// to implement groups.
 type handlerLogger struct {
 	attrs map[string]any
 }
 
+// append stores into it's context: Pairs of [string, any] or slog.Attr's.
+// For any other format, it will print the value or values given with a
+// BADKEY name.
 func (l *handlerLogger) append(attrs ...any) {
 	i := 0
 
@@ -44,6 +54,8 @@ func (l *handlerLogger) append(attrs ...any) {
 	}
 }
 
+// asAttrs returns internal representation of context as slog.Attr's to be
+// printed by a slog.Logger.
 func (l *handlerLogger) asAttrs() []any {
 	attrs := make([]any, 0, len(l.attrs))
 	for name, attr := range maps.All(l.attrs) {

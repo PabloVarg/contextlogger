@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// HttpMiddleware is meant to be used with the package net/http from Go's standard library
 func HttpMiddleware(next http.Handler, opts ...middlewareConfigurator) http.Handler {
 	conf := defaultMiddlewareConfig()
 	for _, opt := range opts {
@@ -25,7 +26,7 @@ func HttpMiddleware(next http.Handler, opts ...middlewareConfigurator) http.Hand
 				"url", r.URL.String(),
 			)
 		}
-		conf.preHook(w, r)
+		conf.preHook(r)
 
 		defer func() {
 			if conf.withDefaultValues {
@@ -34,7 +35,7 @@ func HttpMiddleware(next http.Handler, opts ...middlewareConfigurator) http.Hand
 					"duration", time.Since(start).Nanoseconds(),
 				)
 			}
-			conf.postHook(w, r)
+			conf.postHook(r)
 
 			LogWithContext(r.Context(), conf.logger, slog.LevelInfo, "http server hit")
 		}()

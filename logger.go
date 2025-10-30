@@ -5,18 +5,30 @@ import (
 	"log/slog"
 )
 
-func EmbedLoggingAttrs(ctx context.Context, opts ...BucketConfigurator) context.Context {
+// EmbedLoggingAttrs embeds a contextual logger into the passed context.Context.
+// Returns a new context.Context with the embeded logger.
+func EmbedLoggingAttrs(
+	ctx context.Context,
+	logger *slog.Logger,
+	opts ...bucketConfigurator,
+) context.Context {
 	conf := defaultBucketConfig()
 	for _, opt := range opts {
 		opt(conf)
 	}
 
-	return context.WithValue(ctx, loggerKey, &handlerLogger{
+	ctx = context.WithValue(ctx, loggerKey, &handlerLogger{
 		attrs: make(map[string]any, conf.capacity),
 	})
+	ctx = context.WithValue(ctx, slogLoggerKey, logger)
+
+	return ctx
 }
 
-func WithGroup(ctx context.Context, name string, opts ...BucketConfigurator) context.Context {
+// WithGroup creates a group with the given name on the current group give by the
+// context.Context passed into the function. Returns inner context.Context created
+// for the new group.
+func WithGroup(ctx context.Context, name string, opts ...bucketConfigurator) context.Context {
 	conf := defaultBucketConfig()
 	for _, opt := range opts {
 		opt(conf)
@@ -34,6 +46,9 @@ func WithGroup(ctx context.Context, name string, opts ...BucketConfigurator) con
 	return context.WithValue(ctx, loggerKey, logger)
 }
 
+// UpdateContext updates a series of [key, values] from the current logging context
+// the input is the same as slog args, i.e.: pairs of [string, any] or slog.Attr's.
+// Malformed inputs that don't conform to this, will be assigned to a BADKEY key.
 func UpdateContext(ctx context.Context, attrs ...any) {
 	logger, ok := ctx.Value(loggerKey).(*handlerLogger)
 	if !ok {
@@ -43,8 +58,14 @@ func UpdateContext(ctx context.Context, attrs ...any) {
 	logger.append(attrs...)
 }
 
-func LogWithContext(ctx context.Context, logger *slog.Logger, level slog.Level, msg string) {
+// LogWithContext logs everything stored into the context by calls to UpdateContext
+func LogWithContext(ctx context.Context, level slog.Level, msg string) {
 	handlerLogger, ok := ctx.Value(loggerKey).(*handlerLogger)
+	if !ok {
+		return
+	}
+
+	logger, ok := ctx.Value(slogLoggerKey).(*slog.Logger)
 	if !ok {
 		return
 	}
