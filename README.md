@@ -18,6 +18,8 @@ It has the following features:
 - Multiple Handlers - Support for JSON, text, and custom log formats. Basically, everything that slog supports
 - Performance Focused - Minimal overhead with efficient context propagation
 
+<img align="right" src="assets/demo.png">
+
 ## Why use Context Logger?
 
 Traditional logging often requires passing a logger instance through your entire call stack or using a global logger that lacks request-specific context. Context Logger solves this by:
