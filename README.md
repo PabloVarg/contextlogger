@@ -1,5 +1,9 @@
 # Go's Context Logger
 
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/pablovarg/contextlogger)
+![GitHub License](https://img.shields.io/github/license/pablovarg/contextlogger)
+![GitHub Tag](https://img.shields.io/github/v/tag/pablovarg/contextlogger)
+
 ContextLogger implements contextual logging using `slog` by embedding itself into `context.Context`'s.
 Making it effortless to maintain consistent log context throughout your application's call stack.
 
