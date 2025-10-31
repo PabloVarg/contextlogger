@@ -18,7 +18,7 @@ It has the following features:
 - Multiple Handlers - Support for JSON, text, and custom log formats. Basically, everything that slog supports
 - Performance Focused - Minimal overhead with efficient context propagation
 
-<img align="right" src="assets/demo.png">
+![Demo](assets/demo.png)
 
 ## Why use Context Logger?
 
