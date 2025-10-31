@@ -22,6 +22,7 @@ type (
 // Generate default values for a BucketConfig.
 func DefaultBucketConfig() *BucketConfig {
 	return &BucketConfig{
+		Logger:   slog.Default(),
 		Capacity: 20,
 	}
 }

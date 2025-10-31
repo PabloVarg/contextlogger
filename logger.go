@@ -11,7 +11,6 @@ import (
 // Returns a new context.Context with the embeded logger.
 func EmbedLoggingAttrs(
 	ctx context.Context,
-	logger *slog.Logger,
 	opts ...buckets.BucketConfigurator,
 ) context.Context {
 	conf := buckets.DefaultBucketConfig()
@@ -22,7 +21,7 @@ func EmbedLoggingAttrs(
 	ctx = context.WithValue(ctx, loggerKey, &buckets.Bucket{
 		Attrs: make(map[string]any, conf.Capacity),
 	})
-	ctx = context.WithValue(ctx, slogLoggerKey, logger)
+	ctx = context.WithValue(ctx, slogLoggerKey, conf.Logger)
 
 	return ctx
 }
