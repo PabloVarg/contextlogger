@@ -10,7 +10,7 @@ import (
 )
 
 // HttpMiddleware is meant to be used with the package net/http from Go's standard library
-func HttpMiddleware(next http.Handler, opts ...middlewareConfigurator) http.Handler {
+func LoggingMiddleware(next http.Handler, opts ...middlewareConfigurator) http.Handler {
 	conf := DefaultMiddlewareConfig()
 	for _, opt := range opts {
 		opt(conf)
