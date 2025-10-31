@@ -3,6 +3,7 @@
 <img align="right" src="assets/contextlogger.svg">[![Releases](https://img.shields.io/github/v/release/pablovarg/contextlogger)](https://github.com/pablovarg/contextlogger/releases)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/pablovarg/contextlogger)
 ![GitHub License](https://img.shields.io/github/license/pablovarg/contextlogger)
+[![Go Reference](https://pkg.go.dev/badge/github.com/pablovarg/contextlogger.svg)](https://pkg.go.dev/github.com/pablovarg/contextlogger)
 
 ContextLogger implements contextual logging using `slog` by embedding itself into `context.Context`'s.
 Making it effortless to maintain consistent log context throughout your application's call stack.
