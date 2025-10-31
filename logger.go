@@ -4,12 +4,12 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/pablovarg/contextlogger/internal/buckets"
+	"github.com/pablovarg/contextlogger/buckets"
 )
 
-// EmbedLoggingAttrs embeds a contextual logger into the passed context.Context.
+// EmbedLogger embeds a contextual logger into the passed context.Context.
 // Returns a new context.Context with the embeded logger.
-func EmbedLoggingAttrs(
+func EmbedLogger(
 	ctx context.Context,
 	opts ...buckets.BucketConfigurator,
 ) context.Context {

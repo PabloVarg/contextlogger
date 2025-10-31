@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/pablovarg/contextlogger"
+	"github.com/pablovarg/contextlogger/buckets"
 )
 
 // HttpMiddleware is meant to be used with the package net/http from Go's standard library
@@ -18,7 +19,7 @@ func HttpMiddleware(next http.Handler, opts ...middlewareConfigurator) http.Hand
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
-		r = r.WithContext(contextlogger.EmbedLoggingAttrs(r.Context(), conf.logger))
+		r = r.WithContext(contextlogger.EmbedLogger(r.Context(), buckets.WithLogger(conf.logger)))
 		if conf.withDefaultValues {
 			contextlogger.UpdateContext(
 				r.Context(),

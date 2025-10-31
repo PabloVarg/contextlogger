@@ -3,7 +3,7 @@ package contextlogger
 import (
 	"context"
 
-	"github.com/pablovarg/contextlogger/internal/buckets"
+	"github.com/pablovarg/contextlogger/buckets"
 )
 
 // loggerGroup retrieves a nested group in the current layer for context with a given name,
